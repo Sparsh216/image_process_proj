@@ -1,0 +1,55 @@
+Component Descriptions
+
+API Server:
+
+Role: Handles HTTP requests from clients, validates input, and routes requests to appropriate modules.
+Functions: Implements CRUD operations for products and requests, triggers image processing tasks, and generates CSV reports.
+Technology: FastAPI framework with Python, Celery for task scheduling, SQLAlchemy for database interaction.
+Database:
+
+Database:
+
+Role: Persists application data, including products, requests, and temporary files.
+Schema: Describe the database schema, including tables like products, requests, and their relationships.
+Technology: MySQL for relational database management.
+Image Processing Module:
+
+Image Processing Module:
+
+Role: Processes images, including resizing, format conversion, and uploading to external storage.
+Functions: Converts images, uploads to Cloudinary (or local file storage), and updates product records with output URLs.
+Technology: Python with PIL library for image processing, Cloudinary API for storage.
+File Storage:
+
+File Storage:
+
+Role: Temporarily stores images and CSV files during processing.
+Location: Local file system within the application directory (temp_images, temp_output_csv).
+
+
+components and their interactions:
+
+    [Client]         [API Server]      [Image Processing Module]     [Database]       [File Storage]
+       |                  |                     |                        |                  |
+       |    Upload Image  |                     |                        |                  |
+       | ---------------> |    Process Image    |                        |                  |
+       |                  | ------------------> |                        |                  |
+       |                  |                     |    Convert & Upload    |                  |
+       |                  |                     | ---------------------> |                  |
+       |                  |                     |                        |                  |
+       |                  |                     |    Update Product      |                  |
+       |                  |                     | <--------------------- |                  |
+       |                  |                     |                        |                  |
+       |                  |                     |                        |                  |
+       |   Generate CSV   |                     |                        |                  |
+       | ---------------->|   Fetch Data &      |                        |                  |
+       |                  |   Generate CSV      |                        |                  |
+       |                  | ------------------->|                        |                  |
+       |                  |                     |    Generate CSV        |                  |
+       |                  |                     | ---------------------> |                  |
+       |                  |                     |                        |                  |
+       |                  |                     |   Upload CSV to        |                  |
+       |                  |                     |   Cloudinary           |                  |
+       |                  |                     | ---------------------> |                  |
+       |                  |                     |                        |                  |
+       |                  |                     |                        |                  |
